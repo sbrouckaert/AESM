@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic English Stamina Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --primary-dark: #083358;
+            --accent: #ff6b35;
+            --accent-light: #ff8c61;
+            --success: #2ecc71;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --shadow: rgba(15, 76, 129, 0.1);
+            --shadow-hover: rgba(15, 76, 129, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 2px 4px 12px rgba(0,0,0,0.3);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px var(--shadow);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px var(--shadow-hover);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Sublist Filter */
+        .sublist-filter {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .sublist-btn {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--text);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .sublist-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-hover);
+        }
+
+        .sublist-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Mode Selector */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            background: var(--card-bg);
+            border: 3px solid transparent;
+            padding: 15px 35px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--text);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        /* Main Content Area */
+        .content-area {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            min-height: 400px;
+            position: relative;
+        }
+
+        /* Flashcard Styles */
+        .flashcard-container {
+            perspective: 1000px;
+            max-width: 700px;
+            margin: 0 auto;
+            height: 400px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .sublist-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .word {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .word-type {
+            font-size: 1rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .definition {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .example {
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.95;
+            line-height: 1.5;
+            border-left: 3px solid rgba(255,255,255,0.5);
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        .flip-hint {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 30px;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-hover);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .quiz-word {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin: 20px 0;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            background: var(--bg);
+            border: 3px solid transparent;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-align: left;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            background: white;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: #e74c3c;
+            background: #e74c3c;
+            color: white;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .quiz-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .leaderboard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-entry:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .rank {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 50px;
+        }
+
+        .rank.top-1 { color: #f1c40f; }
+        .rank.top-2 { color: #95a5a6; }
+        .rank.top-3 { color: #cd7f32; }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .player-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Username Input */
+        .username-input {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .username-input input {
+            padding: 12px 20px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Work Sans', sans-serif;
+            width: 250px;
+        }
+
+        .username-input button {
+            padding: 12px 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .username-input button:hover {
+            background: var(--accent-light);
+        }
+
+        /* Progress Mode Styles */
+        .progress-container, .teacher-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .progress-title, .teacher-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .progress-summary {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .student-name-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .overall-progress {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .mastery-categories {
+            margin-top: 30px;
+        }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .sublist-progress-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .sublist-progress-item {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sublist-progress-item:hover {
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .sublist-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sublist-name {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .sublist-percentage {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .sublist-percentage.mastered {
+            color: var(--success);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-bar-fill.mastered {
+            background: linear-gradient(90deg, var(--success) 0%, #27ae60 100%);
+        }
+
+        .sublist-details {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .export-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .export-hint {
+            margin-top: 10px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Teacher Mode Styles */
+        .teacher-instructions {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .import-section {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .import-section h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        #studentReportInput {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+
+        .imported-reports {
+            background: var(--bg);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .imported-reports h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .no-reports {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px;
+            font-style: italic;
+        }
+
+        .student-report-card {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--bg);
+        }
+
+        .report-student-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .report-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .report-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .report-stat {
+            text-align: center;
+            padding: 10px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+
+        .report-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .report-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .report-categories {
+            margin-top: 20px;
+        }
+
+        .report-category {
+            margin-bottom: 15px;
+        }
+
+        .report-category-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .report-sublists {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .report-sublist-badge {
+            background: var(--bg);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .report-sublist-badge.high {
+            background: #d4edda;
+            color: #155724;
+            font-weight: 600;
+        }
+
+        .report-sublist-badge.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .report-sublist-badge.low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .mastery-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .mastery-badge.mastered {
+            background: var(--success);
+            color: white;
+        }
+
+        .mastery-badge.in-progress {
+            background: #ff9800;
+            color: white;
+        }
+
+        .mastery-badge.not-started {
+            background: #9e9e9e;
+            color: white;
+        }
+
+        .sublist-btn.mastered {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+
+        .sublist-btn.in-progress {
+            background: #ff9800 !important;
+            color: white !important;
+            border-color: #ff9800 !important;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .flashcard-container {
+                height: 350px;
+            }
+
+            .word {
+                font-size: 2rem;
+            }
+
+            .definition {
+                font-size: 1.1rem;
+            }
+
+            .sublist-filter {
+                gap: 5px;
+            }
+
+            .sublist-btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+
+            .report-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Academic English Stamina Master</h1>
+            <p class="subtitle">Master 570 Academic Words • B2-C1 Level</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-value" id="wordsLearned">0</span>
+                <span class="stat-label">Words Learned</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalScore">0</span>
+                <span class="stat-label">Total Score</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="accuracy">0%</span>
+                <span class="stat-label">Accuracy</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="streak">0</span>
+                <span class="stat-label">Streak</span>
+            </div>
+        </div>
+
+        <div class="sublist-filter">
+            <button class="sublist-btn active" data-sublist="all">All Words</button>
+            <button class="sublist-btn" data-sublist="1" data-mastery="0">✓ Check 1</button>
+            <button class="sublist-btn" data-sublist="2" data-mastery="0">✓ Check 2</button>
+            <button class="sublist-btn" data-sublist="3" data-mastery="0">✓ Check 3</button>
+            <button class="sublist-btn" data-sublist="4" data-mastery="0">✓ Check 4</button>
+            <button class="sublist-btn" data-sublist="5" data-mastery="0">✓✓ Double 5</button>
+            <button class="sublist-btn" data-sublist="6" data-mastery="0">✓✓ Double 6</button>
+            <button class="sublist-btn" data-sublist="7" data-mastery="0">✓✓ Double 7</button>
+            <button class="sublist-btn" data-sublist="8" data-mastery="0">✓✓✓ Triple 8</button>
+            <button class="sublist-btn" data-sublist="9" data-mastery="0">✓✓✓ Triple 9</button>
+            <button class="sublist-btn" data-sublist="10" data-mastery="0">✓✓✓ Triple 10</button>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="flashcards">📚 Flashcards</button>
+            <button class="mode-btn" data-mode="quiz">🎯 Quiz</button>
+            <button class="mode-btn" data-mode="progress">📊 My Progress</button>
+            <button class="mode-btn" data-mode="leaderboard">🏆 Leaderboard</button>
+            <button class="mode-btn" data-mode="teacher">👨‍🏫 Teacher Report</button>
+        </div>
+
+        <div class="content-area">
+            <!-- Flashcards Mode -->
+            <div id="flashcards-mode" class="mode-content">
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-face flashcard-front">
+                            <div class="sublist-badge" id="sublistBadgeFront">Sublist 1</div>
+                            <div class="word-type" id="wordType">noun</div>
+                            <div class="word" id="wordFront">analysis</div>
+                            <p class="flip-hint">👆 Click to see definition</p>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <div class="sublist-badge" id="sublistBadgeBack">Sublist 1</div>
+                            <div class="definition" id="definition">
+                                The detailed examination of the elements or structure of something
+                            </div>
+                            <div class="example" id="example">
+                                "The analysis of these results shows a clear correlation between study time and academic performance."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prevCard">← Previous</button>
+                    <button class="nav-btn" id="markKnown">✓ I Know This</button>
+                    <button class="nav-btn" id="nextCard">Next →</button>
+                </div>
+            </div>
+
+            <!-- Quiz Mode -->
+            <div id="quiz-mode" class="mode-content hidden">
+                <div class="quiz-container">
+                    <div class="question">What does this word mean?</div>
+                    <div class="quiz-word" id="quizWord">analysis</div>
+                    <div class="options" id="quizOptions">
+                        <!-- Options will be inserted here -->
+                    </div>
+                    <div id="quizFeedback" class="quiz-feedback hidden"></div>
+                    <div class="nav-buttons">
+                        <button class="nav-btn" id="nextQuiz">Next Question →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Mode -->
+            <div id="leaderboard-mode" class="mode-content hidden">
+                <div class="leaderboard">
+                    <h2 class="leaderboard-title">🏆 Top Performers</h2>
+                    <div class="username-input">
+                        <input type="text" id="usernameInput" placeholder="Enter your name" maxlength="20">
+                        <button id="saveUsername">Save Name</button>
+                    </div>
+                    <div id="leaderboardEntries">
+                        <!-- Leaderboard entries will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Mode -->
+            <div id="progress-mode" class="mode-content hidden">
+                <div class="progress-container">
+                    <h2 class="progress-title">📊 My Progress</h2>
+                    <div class="progress-summary">
+                        <p class="student-name-display">Student: <span id="studentNameDisplay">Not set</span></p>
+                        <p class="overall-progress">Overall Mastery: <span id="overallMastery">0%</span></p>
+                    </div>
+                    
+                    <div class="mastery-categories">
+                        <div class="category-section">
+                            <h3 class="category-title">✓ Check Lists (Sublists 1-4)</h3>
+                            <div id="checkListProgress" class="sublist-progress-grid">
+                                <!-- Progress bars will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="category-section">
+                            <h3 class="category-title">✓✓ Double Check Lists (Sublists 5-7)</h3>
+                            <div id="doubleCheckListProgress" class="sublist-progress-grid">
+                                <!-- Progress bars will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="category-section">
+                            <h3 class="category-title">✓✓✓ Triple Check Lists (Sublists 8-10)</h3>
+                            <div id="tripleCheckListProgress" class="sublist-progress-grid">
+                                <!-- Progress bars will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="export-section">
+                        <button class="nav-btn" id="exportProgress">📥 Export Progress for Teacher</button>
+                        <p class="export-hint">Share this report with your teacher to track your progress</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Report Mode -->
+            <div id="teacher-mode" class="mode-content hidden">
+                <div class="teacher-container">
+                    <h2 class="teacher-title">👨‍🏫 Teacher View</h2>
+                    <p class="teacher-instructions">Students can export their progress and share it with you. You can also view class statistics here.</p>
+                    
+                    <div class="import-section">
+                        <h3>Import Student Report</h3>
+                        <textarea id="studentReportInput" placeholder="Paste student progress report here..." rows="6"></textarea>
+                        <button class="nav-btn" id="importReport">Import Report</button>
+                    </div>
+
+                    <div id="importedReports" class="imported-reports">
+                        <h3>Imported Student Reports</h3>
+                        <div id="reportsList">
+                            <p class="no-reports">No reports imported yet. Students can export their progress and share with you.</p>
+                        </div>
+                        <button class="nav-btn" id="clearReports">Clear All Reports</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="awl-vocabulary-data.js"></script>
+    <script>
+        // Game State
+        let currentCardIndex = 0;
+        let currentQuizIndex = 0;
+        let knownWords = new Set();
+        let totalScore = 0;
+        let correctAnswers = 0;
+        let totalAnswers = 0;
+        let currentStreak = 0;
+        let username = localStorage.getItem('awl-username') || '';
+        let leaderboard = JSON.parse(localStorage.getItem('awl-leaderboard')) || [];
+        let currentSublist = 'all';
+        let filteredVocabulary = [...vocabulary];
+
+        // Elements
+        const flashcard = document.getElementById('flashcard');
+        const wordFront = document.getElementById('wordFront');
+        const wordType = document.getElementById('wordType');
+        const definition = document.getElementById('definition');
+        const example = document.getElementById('example');
+        const sublistBadgeFront = document.getElementById('sublistBadgeFront');
+        const sublistBadgeBack = document.getElementById('sublistBadgeBack');
+        const prevCard = document.getElementById('prevCard');
+        const nextCard = document.getElementById('nextCard');
+        const markKnown = document.getElementById('markKnown');
+
+        const quizWord = document.getElementById('quizWord');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizFeedback = document.getElementById('quizFeedback');
+        const nextQuiz = document.getElementById('nextQuiz');
+
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const sublistBtns = document.querySelectorAll('.sublist-btn');
+        const flashcardsMode = document.getElementById('flashcards-mode');
+        const quizMode = document.getElementById('quiz-mode');
+        const progressMode = document.getElementById('progress-mode');
+        const leaderboardMode = document.getElementById('leaderboard-mode');
+        const teacherMode = document.getElementById('teacher-mode');
+
+        const usernameInput = document.getElementById('usernameInput');
+        const saveUsername = document.getElementById('saveUsername');
+
+        const exportProgress = document.getElementById('exportProgress');
+        const importReport = document.getElementById('importReport');
+        const studentReportInput = document.getElementById('studentReportInput');
+        const clearReports = document.getElementById('clearReports');
+
+        // Initialize
+        function init() {
+            filterVocabulary(currentSublist);
+            loadCard(currentCardIndex);
+            loadQuiz(currentQuizIndex);
+            updateStats();
+            updateLeaderboard();
+            if (username) {
+                usernameInput.value = username;
+            }
+        }
+
+        // Filter vocabulary by sublist
+        function filterVocabulary(sublist) {
+            if (sublist === 'all') {
+                filteredVocabulary = [...vocabulary];
+            } else {
+                filteredVocabulary = vocabulary.filter(word => word.sublist === parseInt(sublist));
+            }
+            currentCardIndex = 0;
+            currentQuizIndex = 0;
+        }
+
+        // Sublist filter buttons
+        sublistBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentSublist = btn.dataset.sublist;
+                
+                sublistBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                filterVocabulary(currentSublist);
+                loadCard(currentCardIndex);
+                loadQuiz(currentQuizIndex);
+            });
+        });
+
+        // Flashcard Functions
+        function loadCard(index) {
+            if (filteredVocabulary.length === 0) return;
+            
+            const card = filteredVocabulary[index];
+            wordFront.textContent = card.word;
+            wordType.textContent = card.type;
+            definition.textContent = card.definition;
+            example.textContent = card.example;
+            
+            // Update badge with new naming
+            let badgeText = '';
+            if (card.sublist <= 4) {
+                badgeText = `✓ Check ${card.sublist}`;
+            } else if (card.sublist <= 7) {
+                badgeText = `✓✓ Double ${card.sublist}`;
+            } else {
+                badgeText = `✓✓✓ Triple ${card.sublist}`;
+            }
+            
+            sublistBadgeFront.textContent = badgeText;
+            sublistBadgeBack.textContent = badgeText;
+            flashcard.classList.remove('flipped');
+        }
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+
+        prevCard.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                loadCard(currentCardIndex);
+            }
+        });
+
+        nextCard.addEventListener('click', () => {
+            if (currentCardIndex < filteredVocabulary.length - 1) {
+                currentCardIndex++;
+                loadCard(currentCardIndex);
+            }
+        });
+
+        markKnown.addEventListener('click', () => {
+            const currentWord = filteredVocabulary[currentCardIndex].word;
+            if (!knownWords.has(currentWord)) {
+                knownWords.add(currentWord);
+                totalScore += 10;
+                updateStats();
+                updateSublistButtons();
+                saveProgress();
+            }
+            if (currentCardIndex < filteredVocabulary.length - 1) {
+                currentCardIndex++;
+                loadCard(currentCardIndex);
+            }
+        });
+
+        // Quiz Functions
+        function loadQuiz(index) {
+            if (filteredVocabulary.length === 0) return;
+            
+            const currentWord = filteredVocabulary[index];
+            quizWord.textContent = currentWord.word;
+            
+            // Generate options
+            const correctDef = currentWord.definition;
+            const wrongDefs = vocabulary
+                .filter((_, i) => vocabulary[i].word !== currentWord.word)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3)
+                .map(w => w.definition);
+            
+            const allOptions = [correctDef, ...wrongDefs].sort(() => Math.random() - 0.5);
+            
+            quizOptions.innerHTML = '';
+            allOptions.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.addEventListener('click', () => selectAnswer(option, correctDef));
+                quizOptions.appendChild(optionDiv);
+            });
+            
+            quizFeedback.classList.add('hidden');
+            nextQuiz.style.display = 'none';
+        }
+
+        function selectAnswer(selected, correct) {
+            totalAnswers++;
+            const isCorrect = selected === correct;
+            
+            if (isCorrect) {
+                correctAnswers++;
+                totalScore += 20;
+                currentStreak++;
+                quizFeedback.textContent = '✓ Correct! Well done!';
+                quizFeedback.className = 'quiz-feedback correct';
+            } else {
+                currentStreak = 0;
+                quizFeedback.textContent = '✗ Not quite. The correct answer is highlighted.';
+                quizFeedback.className = 'quiz-feedback incorrect';
+            }
+            
+            // Disable all options and show correct/incorrect
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.textContent === correct) {
+                    opt.classList.add('correct');
+                } else if (opt.textContent === selected && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            quizFeedback.classList.remove('hidden');
+            nextQuiz.style.display = 'inline-block';
+            updateStats();
+            updateSublistButtons();
+            saveProgress();
+        }
+
+        nextQuiz.addEventListener('click', () => {
+            currentQuizIndex = (currentQuizIndex + 1) % filteredVocabulary.length;
+            loadQuiz(currentQuizIndex);
+        });
+
+        // Mode Switching
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                flashcardsMode.classList.add('hidden');
+                quizMode.classList.add('hidden');
+                progressMode.classList.add('hidden');
+                leaderboardMode.classList.add('hidden');
+                teacherMode.classList.add('hidden');
+                
+                if (mode === 'flashcards') {
+                    flashcardsMode.classList.remove('hidden');
+                } else if (mode === 'quiz') {
+                    quizMode.classList.remove('hidden');
+                } else if (mode === 'progress') {
+                    progressMode.classList.remove('hidden');
+                    updateProgressView();
+                } else if (mode === 'leaderboard') {
+                    leaderboardMode.classList.remove('hidden');
+                    updateLeaderboard();
+                } else if (mode === 'teacher') {
+                    teacherMode.classList.remove('hidden');
+                    loadTeacherReports();
+                }
+            });
+        });
+
+        // Stats Functions
+        function updateStats() {
+            document.getElementById('wordsLearned').textContent = knownWords.size;
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('accuracy').textContent = 
+                totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) + '%' : '0%';
+            document.getElementById('streak').textContent = currentStreak;
+        }
+
+        // Leaderboard Functions
+        saveUsername.addEventListener('click', () => {
+            const newUsername = usernameInput.value.trim();
+            if (newUsername) {
+                username = newUsername;
+                localStorage.setItem('awl-username', username);
+                updateLeaderboardEntry();
+                updateLeaderboard();
+            }
+        });
+
+        function updateLeaderboardEntry() {
+            if (!username) return;
+            
+            const existingIndex = leaderboard.findIndex(entry => entry.name === username);
+            
+            if (existingIndex >= 0) {
+                if (totalScore > leaderboard[existingIndex].score) {
+                    leaderboard[existingIndex].score = totalScore;
+                }
+            } else {
+                leaderboard.push({ name: username, score: totalScore });
+            }
+            
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 10);
+            
+            localStorage.setItem('awl-leaderboard', JSON.stringify(leaderboard));
+        }
+
+        function updateLeaderboard() {
+            const leaderboardEntries = document.getElementById('leaderboardEntries');
+            
+            if (leaderboard.length === 0) {
+                leaderboardEntries.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 40px;">No entries yet. Be the first!</p>';
+                return;
+            }
+            
+            leaderboardEntries.innerHTML = leaderboard.map((entry, index) => {
+                const rankClass = index === 0 ? 'top-1' : index === 1 ? 'top-2' : index === 2 ? 'top-3' : '';
+                return `
+                    <div class="leaderboard-entry">
+                        <div class="rank ${rankClass}">#${index + 1}</div>
+                        <div class="player-info">
+                            <div class="player-name">${entry.name}</div>
+                        </div>
+                        <div class="player-score">${entry.score}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Save Progress
+        function saveProgress() {
+            localStorage.setItem('awl-known-words', JSON.stringify([...knownWords]));
+            localStorage.setItem('awl-score', totalScore);
+            localStorage.setItem('awl-correct', correctAnswers);
+            localStorage.setItem('awl-total', totalAnswers);
+            localStorage.setItem('awl-streak', currentStreak);
+            updateLeaderboardEntry();
+        }
+
+        // Load Progress
+        function loadProgress() {
+            const savedKnown = localStorage.getItem('awl-known-words');
+            if (savedKnown) {
+                knownWords = new Set(JSON.parse(savedKnown));
+            }
+            
+            totalScore = parseInt(localStorage.getItem('awl-score')) || 0;
+            correctAnswers = parseInt(localStorage.getItem('awl-correct')) || 0;
+            totalAnswers = parseInt(localStorage.getItem('awl-total')) || 0;
+            currentStreak = parseInt(localStorage.getItem('awl-streak')) || 0;
+        }
+
+        // Progress Tracking Functions
+        function getSublistMastery(sublistNum) {
+            const sublistWords = vocabulary.filter(w => w.sublist === sublistNum);
+            const knownCount = sublistWords.filter(w => knownWords.has(w.word)).length;
+            const total = sublistWords.length;
+            const percentage = total > 0 ? Math.round((knownCount / total) * 100) : 0;
+            
+            return {
+                sublist: sublistNum,
+                known: knownCount,
+                total: total,
+                percentage: percentage,
+                mastered: percentage >= 80
+            };
+        }
+
+        function updateSublistButtons() {
+            sublistBtns.forEach(btn => {
+                const sublist = btn.dataset.sublist;
+                if (sublist === 'all') return;
+                
+                const mastery = getSublistMastery(parseInt(sublist));
+                
+                // Update button appearance based on mastery
+                btn.classList.remove('mastered', 'in-progress');
+                if (mastery.percentage >= 80) {
+                    btn.classList.add('mastered');
+                } else if (mastery.percentage >= 30) {
+                    btn.classList.add('in-progress');
+                }
+            });
+        }
+
+        function updateProgressView() {
+            // Update student name display
+            document.getElementById('studentNameDisplay').textContent = username || 'Not set';
+            
+            // Calculate overall mastery
+            const totalWords = vocabulary.length;
+            const totalKnown = knownWords.size;
+            const overallPercentage = Math.round((totalKnown / totalWords) * 100);
+            document.getElementById('overallMastery').textContent = overallPercentage + '%';
+            
+            // Update Check Lists (1-4)
+            updateCategoryProgress('checkListProgress', [1, 2, 3, 4]);
+            
+            // Update Double Check Lists (5-7)
+            updateCategoryProgress('doubleCheckListProgress', [5, 6, 7]);
+            
+            // Update Triple Check Lists (8-10)
+            updateCategoryProgress('tripleCheckListProgress', [8, 9, 10]);
+        }
+
+        function updateCategoryProgress(containerId, sublists) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            sublists.forEach(sublistNum => {
+                const mastery = getSublistMastery(sublistNum);
+                const masteryClass = mastery.percentage >= 80 ? 'mastered' : '';
+                const masteryBadge = mastery.percentage >= 80 ? 
+                    '<span class="mastery-badge mastered">✓ Mastered</span>' :
+                    mastery.percentage >= 30 ?
+                    '<span class="mastery-badge in-progress">In Progress</span>' :
+                    '<span class="mastery-badge not-started">Not Started</span>';
+                
+                const div = document.createElement('div');
+                div.className = 'sublist-progress-item';
+                div.innerHTML = `
+                    <div class="sublist-progress-header">
+                        <span class="sublist-name">Sublist ${sublistNum}</span>
+                        <span class="sublist-percentage ${masteryClass}">${mastery.percentage}%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill ${masteryClass}" style="width: ${mastery.percentage}%"></div>
+                    </div>
+                    <div class="sublist-details">
+                        ${mastery.known} of ${mastery.total} words known ${masteryBadge}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function generateProgressReport() {
+            const report = {
+                studentName: username || 'Anonymous',
+                date: new Date().toLocaleDateString(),
+                timestamp: Date.now(),
+                stats: {
+                    totalWords: vocabulary.length,
+                    wordsKnown: knownWords.size,
+                    totalScore: totalScore,
+                    correctAnswers: correctAnswers,
+                    totalAnswers: totalAnswers,
+                    accuracy: totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0,
+                    streak: currentStreak
+                },
+                sublists: {}
+            };
+            
+            // Get mastery for each sublist
+            for (let i = 1; i <= 10; i++) {
+                report.sublists[i] = getSublistMastery(i);
+            }
+            
+            return report;
+        }
+
+        function exportProgressReport() {
+            if (!username) {
+                alert('Please set your name first in the Leaderboard section!');
+                return;
+            }
+            
+            const report = generateProgressReport();
+            const reportText = formatReportForExport(report);
+            
+            // Create a downloadable text file
+            const blob = new Blob([reportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `AWL_Progress_${username}_${report.date.replace(/\//g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Progress report downloaded! Share this file with your teacher.');
+        }
+
+        function formatReportForExport(report) {
+            let text = '==============================================\n';
+            text += 'ACADEMIC ENGLISH STAMINA MASTER - PROGRESS REPORT\n';
+            text += '==============================================\n\n';
+            text += `Student Name: ${report.studentName}\n`;
+            text += `Date: ${report.date}\n\n`;
+            
+            text += '--- OVERALL STATISTICS ---\n';
+            text += `Total Words Known: ${report.stats.wordsKnown} / ${report.stats.totalWords}\n`;
+            text += `Overall Mastery: ${Math.round((report.stats.wordsKnown / report.stats.totalWords) * 100)}%\n`;
+            text += `Total Score: ${report.stats.totalScore}\n`;
+            text += `Quiz Accuracy: ${report.stats.accuracy}%\n`;
+            text += `Current Streak: ${report.stats.streak}\n\n`;
+            
+            text += '--- CHECK LISTS (Sublists 1-4) ---\n';
+            for (let i = 1; i <= 4; i++) {
+                const s = report.sublists[i];
+                text += `Sublist ${i}: ${s.percentage}% (${s.known}/${s.total}) ${s.mastered ? '✓ MASTERED' : ''}\n`;
+            }
+            text += '\n';
+            
+            text += '--- DOUBLE CHECK LISTS (Sublists 5-7) ---\n';
+            for (let i = 5; i <= 7; i++) {
+                const s = report.sublists[i];
+                text += `Sublist ${i}: ${s.percentage}% (${s.known}/${s.total}) ${s.mastered ? '✓ MASTERED' : ''}\n`;
+            }
+            text += '\n';
+            
+            text += '--- TRIPLE CHECK LISTS (Sublists 8-10) ---\n';
+            for (let i = 8; i <= 10; i++) {
+                const s = report.sublists[i];
+                text += `Sublist ${i}: ${s.percentage}% (${s.known}/${s.total}) ${s.mastered ? '✓ MASTERED' : ''}\n`;
+            }
+            text += '\n==============================================\n';
+            text += 'DATA FOR IMPORT (DO NOT MODIFY):\n';
+            text += JSON.stringify(report);
+            
+            return text;
+        }
+
+        // Teacher Report Functions
+        function importStudentReport() {
+            const reportText = studentReportInput.value.trim();
+            if (!reportText) {
+                alert('Please paste a student report first!');
+                return;
+            }
+            
+            try {
+                // Extract JSON from the report
+                const jsonMatch = reportText.match(/DATA FOR IMPORT.*?\n(.*)/s);
+                if (!jsonMatch) {
+                    alert('Invalid report format. Please paste the entire exported report.');
+                    return;
+                }
+                
+                const report = JSON.parse(jsonMatch[1]);
+                
+                // Save to teacher reports
+                let teacherReports = JSON.parse(localStorage.getItem('awl-teacher-reports') || '[]');
+                
+                // Check if report already exists for this student and date
+                const existingIndex = teacherReports.findIndex(r => 
+                    r.studentName === report.studentName && r.timestamp === report.timestamp
+                );
+                
+                if (existingIndex >= 0) {
+                    if (confirm('A report from this student with this date already exists. Replace it?')) {
+                        teacherReports[existingIndex] = report;
+                    } else {
+                        return;
+                    }
+                } else {
+                    teacherReports.push(report);
+                }
+                
+                localStorage.setItem('awl-teacher-reports', JSON.stringify(teacherReports));
+                studentReportInput.value = '';
+                loadTeacherReports();
+                alert('Student report imported successfully!');
+            } catch (e) {
+                alert('Error importing report. Please make sure you pasted the entire exported report.');
+                console.error(e);
+            }
+        }
+
+        function loadTeacherReports() {
+            const teacherReports = JSON.parse(localStorage.getItem('awl-teacher-reports') || '[]');
+            const reportsList = document.getElementById('reportsList');
+            
+            if (teacherReports.length === 0) {
+                reportsList.innerHTML = '<p class="no-reports">No reports imported yet. Students can export their progress and share with you.</p>';
+                return;
+            }
+            
+            // Sort by date (newest first)
+            teacherReports.sort((a, b) => b.timestamp - a.timestamp);
+            
+            reportsList.innerHTML = teacherReports.map(report => {
+                const overallMastery = Math.round((report.stats.wordsKnown / report.stats.totalWords) * 100);
+                
+                return `
+                    <div class="student-report-card">
+                        <div class="report-header">
+                            <div class="report-student-name">${report.studentName}</div>
+                            <div class="report-date">${report.date}</div>
+                        </div>
+                        <div class="report-stats">
+                            <div class="report-stat">
+                                <span class="report-stat-value">${overallMastery}%</span>
+                                <span class="report-stat-label">Overall Mastery</span>
+                            </div>
+                            <div class="report-stat">
+                                <span class="report-stat-value">${report.stats.wordsKnown}</span>
+                                <span class="report-stat-label">Words Known</span>
+                            </div>
+                            <div class="report-stat">
+                                <span class="report-stat-value">${report.stats.totalScore}</span>
+                                <span class="report-stat-label">Total Score</span>
+                            </div>
+                            <div class="report-stat">
+                                <span class="report-stat-value">${report.stats.accuracy}%</span>
+                                <span class="report-stat-label">Quiz Accuracy</span>
+                            </div>
+                        </div>
+                        <div class="report-categories">
+                            <div class="report-category">
+                                <div class="report-category-title">✓ Check Lists (1-4)</div>
+                                <div class="report-sublists">
+                                    ${[1,2,3,4].map(i => {
+                                        const s = report.sublists[i];
+                                        const cls = s.percentage >= 80 ? 'high' : s.percentage >= 50 ? 'medium' : 'low';
+                                        return `<div class="report-sublist-badge ${cls}">S${i}: ${s.percentage}%</div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="report-category">
+                                <div class="report-category-title">✓✓ Double Check Lists (5-7)</div>
+                                <div class="report-sublists">
+                                    ${[5,6,7].map(i => {
+                                        const s = report.sublists[i];
+                                        const cls = s.percentage >= 80 ? 'high' : s.percentage >= 50 ? 'medium' : 'low';
+                                        return `<div class="report-sublist-badge ${cls}">S${i}: ${s.percentage}%</div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="report-category">
+                                <div class="report-category-title">✓✓✓ Triple Check Lists (8-10)</div>
+                                <div class="report-sublists">
+                                    ${[8,9,10].map(i => {
+                                        const s = report.sublists[i];
+                                        const cls = s.percentage >= 80 ? 'high' : s.percentage >= 50 ? 'medium' : 'low';
+                                        return `<div class="report-sublist-badge ${cls}">S${i}: ${s.percentage}%</div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearAllReports() {
+            if (confirm('Are you sure you want to clear all imported student reports? This cannot be undone.')) {
+                localStorage.removeItem('awl-teacher-reports');
+                loadTeacherReports();
+                alert('All reports cleared.');
+            }
+        }
+
+        // Event Listeners for new features
+        exportProgress.addEventListener('click', exportProgressReport);
+        importReport.addEventListener('click', importStudentReport);
+        clearReports.addEventListener('click', clearAllReports);
+
+        // Initialize on load
+        loadProgress();
+        init();
+        updateSublistButtons();
+    </script>
+</body>
+</html>
